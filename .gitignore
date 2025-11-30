@@ -1,3 +1,20 @@
+# Environment secrets
 .env
+
+# Virtual environments
 venv/
+.venv/
+
+# Python artifacts
 __pycache__/
+*.pyc
+
+# Memory logs (Morningstar’s stored experiences)
+memory/*.jsonl
+
+# Optional logs directory
+logs/
+
+# OS-specific junk (optional but common)
+.DS_Store
+Thumbs.db
