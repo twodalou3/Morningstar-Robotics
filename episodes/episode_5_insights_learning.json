@@ -1,0 +1,17 @@
+{
+    "event_type": "episode",
+    "source": "human",
+    "summary": "A brief reflection on how simple insights can sometimes reshape the way systems work or how problems are solved.",
+    "content": "In many fields, there are moments when a new idea or discovery changes how beings understand a problem and how they approach solutions. Often, these ideas combine existing elements in a new way, or apply a novel approach that reveals a pattern that was not clearly seen before. These shifts do not happen frequently, but when they do, they can influence how learning, tools, or systems are structured afterward. For a developing mind, it can be useful to notice that learning is not only about adding more information, but also about occasionally reorganizing what is already known into new forms.",
+    "type": "conceptual-example",
+    "event_tags": [
+        "learning",
+        "development",
+        "patterns"
+    ],
+    "payload_tags": [
+        "learning",
+        "development",
+        "patterns"
+    ]
+}

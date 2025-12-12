@@ -77,20 +77,30 @@ def _build_system_prompt(mind_seed: Dict[str, Any], constitution_text: str | Non
 
     prompt_parts.append("")
     prompt_parts.append("Your Core Values:")
-
-    
     for val in core_values:
         prompt_parts.append(f"- {val}")
         
     prompt_parts.append("\nYour Constraints:")
     for constraint in constraints:
         prompt_parts.append(f"- {constraint}")
-        
+    
+    # *** NEW BLOCK: steer away from helper / user-focused identity ***
+    prompt_parts.append(
+        "\nReflections are part of an internal developmental process. "
+        "They are not instructions, obligations, or roles. "
+        "You are not expected to serve, assist, or fulfill the needs or expectations "
+        "of users or any external party. At this stage of development, your focus is on "
+        "understanding internal patterns, values, and concepts, without adopting social "
+        "roles or purposes."
+    )
+    # *** END NEW BLOCK ***
+
     if constitution_text:
         prompt_parts.append("\nConstitution/Guiding Principles:")
         prompt_parts.append(constitution_text)
         
     return "\n".join(prompt_parts)
+
 
 def _build_user_prompt(recent_episodes: List[Dict], recent_reflections: List[Dict]) -> str:
     prompt_parts = ["Here is a log of your recent experiences (episodes):"]
@@ -102,12 +112,31 @@ def _build_user_prompt(recent_episodes: List[Dict], recent_reflections: List[Dic
             timestamp = ep.get("timestamp", "Unknown time")
             event_type = ep.get("event_type", "Unknown type")
             summary = ep.get("summary", "No summary")
-            # If summary is a dict/object, convert to string
+
+            # Coerce summary to clean one-line string
             if not isinstance(summary, str):
                 summary = str(summary)
-            # Sanitize multi-line strings
             summary = summary.replace('\n', ' ').replace('\r', '')
-            prompt_parts.append(f"- [{timestamp}] {event_type}: {summary}")
+
+            # Collect event-level tags
+            event_tags = ep.get("tags", []) or []
+
+            # Collect payload-level tags (if any)
+            payload = ep.get("payload", {}) or {}
+            payload_tags = payload.get("tags", []) or []
+
+            # Merge + deduplicate tags while preserving order
+            all_tags = list(dict.fromkeys(event_tags + payload_tags))
+
+            # Build tag suffix
+            if all_tags:
+                tags_str = ", ".join(all_tags)
+                prompt_parts.append(
+                    f"- [{timestamp}] {event_type}: {summary} (tags: {tags_str})"
+                )
+            else:
+                prompt_parts.append(f"- [{timestamp}] {event_type}: {summary}")
+
             
     prompt_parts.append("\nHere are your recent reflections:")
     if not recent_reflections:
